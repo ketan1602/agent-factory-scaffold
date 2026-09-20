@@ -1,0 +1,4 @@
+domain: finance
+description: financial analysis and risk management
+instructions: "Follow regulatory guidelines. Always flag high-risk items for human review. Never make definitive investment advice."
+default_model: claude-sonnet-4-6

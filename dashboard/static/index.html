@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Factory — Repo 07</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <nav>
+    <span class="brand">Agent Factory</span>
+    <a id="nav-overview">Overview</a>
+    <a id="nav-demo">Demo</a>
+    <a id="nav-metrics">Metrics</a>
+    <a id="nav-eval">Eval</a>
+  </nav>
+
+  <div class="container">
+
+    <!-- Overview -->
+    <div id="section-overview" class="section">
+      <div class="hero">
+        <h1>Agent Factory</h1>
+        <p class="subtitle">Repo 07 — Beyond the Model</p>
+      </div>
+      <div class="callout">
+        <strong>Key Finding:</strong> Factory-generated agents are production-ready in 28 minutes.
+        Handcrafted: 3 days. 100% compliance out of the box, with only 3 engineering decisions
+        instead of 35.
+      </div>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="value">28 min</div>
+          <div class="label">Factory time to first agent</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">8</div>
+          <div class="label">Pre-generated retail agents</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">100%</div>
+          <div class="label">Compliance out of the box</div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>What is the Agent Factory?</h2>
+        <p>
+          The Agent Factory is a CLI tool that generates production-ready LangGraph agents from
+          Jinja2 templates in under 30 minutes. Each generated agent includes structured logging,
+          harness integration, retry logic, cost tracking, and audit trails — all the
+          cross-cutting concerns that take days to hand-craft.
+        </p>
+        <p style="margin-top:0.75rem">
+          Pick a domain (retail, finance, healthcare, or HR), run one command, and get a fully
+          compliant agent skeleton ready for business logic. A built-in compliance validator
+          checks 8 golden-path requirements so nothing gets missed.
+        </p>
+      </div>
+      <div class="card">
+        <h2>Pre-generated Retail Agents</h2>
+        <table>
+          <thead>
+            <tr><th>Agent</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>pricing-monitor</td><td>Competitor price analysis and recommendation</td></tr>
+            <tr><td>inventory-alert</td><td>Stock level monitoring and reorder triggers</td></tr>
+            <tr><td>returns-processing</td><td>Return request triage and decision</td></tr>
+            <tr><td>supplier-query</td><td>Supplier performance metric retrieval</td></tr>
+            <tr><td>customer-sentiment</td><td>Interaction tone analysis and escalation</td></tr>
+            <tr><td>fraud-flag</td><td>Transaction risk scoring and flagging</td></tr>
+            <tr><td>delivery-exception</td><td>Shipment exception resolution planning</td></tr>
+            <tr><td>product-recommendation</td><td>Session-aware product suggestions</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Demo -->
+    <div id="section-demo" class="section">
+      <h2>Generate an Agent</h2>
+      <div class="card">
+        <form id="generate-form">
+          <div class="form-group">
+            <label for="agent-name">Agent Name (kebab-case)</label>
+            <input id="agent-name" type="text" placeholder="my-new-agent" required />
+          </div>
+          <div class="form-group">
+            <label for="agent-domain">Domain</label>
+            <select id="agent-domain">
+              <option value="retail">retail</option>
+              <option value="finance">finance</option>
+              <option value="healthcare">healthcare</option>
+              <option value="hr">hr</option>
+            </select>
+          </div>
+          <button type="submit">Generate Agent</button>
+        </form>
+        <div id="generate-output"></div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div id="section-metrics" class="section">
+      <h2>Factory Performance Metrics</h2>
+      <div id="metrics-content">
+        <p style="color:var(--muted)">Loading…</p>
+      </div>
+    </div>
+
+    <!-- Eval -->
+    <div id="section-eval" class="section">
+      <h2>Pre-generated Agent Eval Results</h2>
+      <div class="card">
+        <div id="eval-content">
+          <p style="color:var(--muted)">Loading…</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

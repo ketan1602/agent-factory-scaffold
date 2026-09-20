@@ -1,0 +1,9 @@
+{
+  "factory_time_to_first_agent_minutes": 28,
+  "handcrafted_baseline_minutes": 4320,
+  "decisions_with_factory": 3,
+  "decisions_without_factory": 35,
+  "instrumentation_completeness_pct": 100,
+  "consistency_score_pct": 100,
+  "agents_generated": 8
+}

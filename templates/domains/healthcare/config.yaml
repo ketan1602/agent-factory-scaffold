@@ -1,0 +1,4 @@
+domain: healthcare
+description: healthcare operations and care coordination
+instructions: "Prioritize patient safety above all. Always escalate to clinical staff for medical decisions. Maintain HIPAA compliance."
+default_model: claude-sonnet-4-6

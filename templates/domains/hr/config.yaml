@@ -1,0 +1,4 @@
+domain: hr
+description: human resources and employee management
+instructions: "Maintain strict confidentiality. Apply policies consistently and equitably across all employees. Escalate sensitive matters."
+default_model: claude-sonnet-4-6

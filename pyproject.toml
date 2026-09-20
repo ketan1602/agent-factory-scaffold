@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-factory-scaffold"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "agent-harness-core @ git+https://github.com/ketan1602/agent-harness-core.git@v1.0.0",
+    "langgraph>=0.2.0",
+    "langchain-core>=0.3.0",
+    "airefinery-sdk>=1.33.0",
+    "truststore>=0.9.1",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "jinja2>=3.1.0",
+    "click>=8.1.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+agent-factory = "cli.main:main"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["cli", "dashboard"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "BLE", "S"]
+ignore = ["S101"]
