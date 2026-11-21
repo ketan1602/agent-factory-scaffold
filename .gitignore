@@ -11,3 +11,6 @@ venv/
 .pytest_cache/
 htmlcov/
 .coverage
+
+# Article draft: kept out of the repo history
+docs/article.md
