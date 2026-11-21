@@ -3,83 +3,62 @@ from __future__ import annotations
 from pathlib import Path
 
 import click
-from harness_core import get_logger
 
 from cli.generator import AgentGenerator
+from cli.measure import measure as run_measure
 from cli.validator import ComplianceValidator
-
-logger = get_logger(__name__)
-
-_VALID_DOMAINS = ["retail", "finance", "healthcare", "hr"]
 
 
 @click.group()
 def main() -> None:
-    """Agent Factory — generate production-ready LangGraph agents."""
+    """Agent Factory: stamp out the support agent with harness, eval and compliance wired in."""
 
 
 @main.command()
-@click.option("--name", required=True, help="Agent name (kebab-case, e.g. pricing-monitor)")
-@click.option(
-    "--domain",
-    required=True,
-    type=click.Choice(_VALID_DOMAINS),
-    help="Domain template to use",
-)
-@click.option(
-    "--output",
-    default="generated_agents",
-    show_default=True,
-    help="Output directory for generated agent",
-)
-@click.option("--dry-run", is_flag=True, default=False, help="Render templates without disk writes")
-def generate(name: str, domain: str, output: str, dry_run: bool) -> None:
-    """Generate a new agent from a domain template."""
-    logger.info("factory_generate_start", agent_name=name, domain=domain, dry_run=dry_run)
-    gen = AgentGenerator(output_dir=Path(output))
-    result = gen.generate(name, domain, dry_run=dry_run)
-
-    click.echo(f"\nAgent: {result.agent_name} ({result.domain})")
-    click.echo(f"Time:  {result.duration_seconds:.2f}s")
-    click.echo(f"Mode:  {'dry-run' if dry_run else 'written'}")
-    click.echo(f"Path:  {result.output_path}\n")
-    click.echo("Files generated:")
-    for f in result.files_generated:
-        click.echo(f"  {f}")
-
-    logger.info(
-        "factory_generate_done",
-        agent_name=name,
-        file_count=len(result.files_generated),
-        duration_seconds=result.duration_seconds,
-    )
+@click.option("--name", required=True, help="Agent name, lowercase kebab-case (e.g. support-east)")
+@click.option("--output", default="generated_agents", show_default=True,
+              type=click.Path(file_okay=False, path_type=Path))
+@click.option("--dry-run", is_flag=True, help="List the files without writing them")
+def generate(name: str, output: Path, dry_run: bool) -> None:
+    """Generate a support agent project."""
+    try:
+        result = AgentGenerator(output_dir=output).generate(name, dry_run=dry_run)
+    except ValueError as exc:
+        raise click.BadParameter(str(exc), param_hint="--name") from exc
+    click.echo(f"Agent: {result.agent_name}")
+    click.echo(f"Time:  {result.duration_seconds:.3f}s")
+    click.echo(f"Mode:  {'dry-run' if dry_run else 'written'} to {result.output_path}")
+    for rel in result.files_generated:
+        click.echo(f"  {rel}")
 
 
 @main.command()
-@click.argument("path", type=click.Path(exists=True, path_type=Path))
+@click.argument("path", type=click.Path(exists=True, file_okay=False, path_type=Path))
 def validate(path: Path) -> None:
-    """Validate a generated agent for compliance with the 8-check standard."""
-    logger.info("factory_validate_start", agent_path=str(path))
-    validator = ComplianceValidator()
-    result = validator.validate(path)
-
-    click.echo(f"\nValidating: {result.agent_path}")
-    click.echo(f"Pass rate: {result.pass_rate_pct:.0f}%\n")
-
+    """Run the compliance checks against a generated agent."""
+    result = ComplianceValidator().validate(path)
     for check in result.checks:
-        icon = "PASS" if check.passed else "FAIL"
-        click.echo(f"  [{icon}] {check.name}: {check.message}")
-
-    status = "ALL CHECKS PASSED" if result.all_passed else "SOME CHECKS FAILED"
-    click.echo(f"\n{status}")
-    logger.info("factory_validate_done", agent_path=str(path), all_passed=result.all_passed)
+        click.echo(f"  [{'PASS' if check.passed else 'FAIL'}] {check.name}: {check.message}")
+    click.echo("ALL CHECKS PASSED" if result.all_passed else "SOME CHECKS FAILED")
+    if not result.all_passed:
+        raise SystemExit(1)
 
 
-@main.command(name="list-templates")
-def list_templates() -> None:
-    """List available domain templates."""
-    gen = AgentGenerator()
-    domains = gen.available_domains()
-    click.echo("\nAvailable domains:")
-    for d in domains:
-        click.echo(f"  {d}")
+@main.command()
+@click.option("--name", required=True, help="Agent name to generate and evaluate")
+@click.option("--output", default="generated_agents", show_default=True,
+              type=click.Path(file_okay=False, path_type=Path))
+@click.option("--report", default="measurements/factory_performance.json", show_default=True,
+              type=click.Path(dir_okay=False, path_type=Path))
+def measure(name: str, output: Path, report: Path) -> None:
+    """Generate the agent, run its live eval, and write the measured timings."""
+    try:
+        data = run_measure(name, output, report)
+    except ValueError as exc:
+        raise click.BadParameter(str(exc), param_hint="--name") from exc
+    click.echo(f"Model:            {data['model']}")
+    click.echo(f"Time to eval:     {data['time_to_eval_minutes']} min")
+    click.echo(f"Cases passed:     {data['cases_passed']}/{data['cases_total']}")
+    checks = f"{data['compliance_checks_passed']}/{data['compliance_checks_total']}"
+    click.echo(f"Compliance:       {checks}")
+    click.echo(f"Wrote {report}")

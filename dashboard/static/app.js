@@ -14,6 +14,17 @@ sections.forEach(s => {
   document.getElementById(`nav-${s}`).addEventListener('click', () => showSection(s));
 });
 
+// Overview: the same measured numbers as Metrics
+async function loadOverview() {
+  const res = await fetch('/api/metrics');
+  const data = await res.json();
+  if (!data.available) return;
+  document.getElementById('stat-time').textContent = `${data.time_to_eval_minutes} min`;
+  document.getElementById('stat-cases').textContent = `${data.cases_passed}/${data.cases_total}`;
+  document.getElementById('stat-compliance').textContent =
+    `${data.compliance_checks_passed}/${data.compliance_checks_total}`;
+}
+
 // Demo
 const form = document.getElementById('generate-form');
 const output = document.getElementById('generate-output');
@@ -21,19 +32,18 @@ const output = document.getElementById('generate-output');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = document.getElementById('agent-name').value.trim();
-  const domain = document.getElementById('agent-domain').value;
   if (!name) return;
 
   const btn = form.querySelector('button');
   btn.disabled = true;
-  btn.textContent = 'Generating…';
+  btn.textContent = 'Working…';
   output.innerHTML = '';
 
   try {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, domain }),
+      body: JSON.stringify({ name }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -45,7 +55,7 @@ form.addEventListener('submit', async (e) => {
     output.innerHTML = `<p style="color:var(--error)">Request failed: ${err.message}</p>`;
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Generate Agent';
+    btn.textContent = 'Preview Files';
   }
 });
 
@@ -59,10 +69,10 @@ function renderGenerateResult(data) {
 
   output.innerHTML = `
     <div class="output-area">
-      <p class="timing">Generated in ${data.duration_seconds}s (dry-run)</p>
+      <p class="timing">Rendered in ${data.duration_seconds}s (dry-run, nothing written)</p>
       <h3>File Tree</h3>
       <div class="file-tree">${tree}</div>
-      <h3 style="margin-top:1rem">Compliance (8 checks)</h3>
+      <h3 style="margin-top:1rem">Compliance of ${data.compliance_source}</h3>
       <div>${checks}</div>
     </div>`;
 }
@@ -83,19 +93,21 @@ async function loadMetrics() {
   try {
     const res = await fetch('/api/metrics');
     const data = await res.json();
+    if (!data.available) {
+      container.innerHTML = `<p style="color:var(--muted)">${data.message}</p>`;
+      return;
+    }
     container.innerHTML = `
-      <div class="stats" style="grid-template-columns:repeat(2,1fr)">
-        <div class="stat-card">
-          <div class="value">${data.factory_time_to_first_agent_minutes} min</div>
-          <div class="label">Factory time to first agent</div>
-        </div>
-        <div class="stat-card">
-          <div class="value">${data.decisions_with_factory}</div>
-          <div class="label">Decisions required (factory)</div>
-        </div>
+      <p style="color:var(--muted);margin-bottom:1rem">
+        Model: <code>${data.model}</code> · measured ${data.measured_at}
+      </p>
+      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card"><div class="value">${data.generate_seconds}s</div><div class="label">Generate</div></div>
+        <div class="stat-card"><div class="value">${data.eval_seconds}s</div><div class="label">Live eval</div></div>
+        <div class="stat-card"><div class="value">${data.total_tokens}</div><div class="label">Tokens (model usage)</div></div>
       </div>
-      <div class="card chart-container">${data.charts.time_comparison}</div>
-      <div class="card chart-container">${data.charts.decisions}</div>`;
+      <div class="card chart-container">${data.charts.time_to_eval}</div>
+      <div class="card chart-container">${data.charts.cases_passed}</div>`;
     metricsLoaded = true;
   } catch (err) {
     container.innerHTML = `<p style="color:var(--error)">Failed to load metrics: ${err.message}</p>`;
@@ -110,20 +122,24 @@ async function loadEval() {
   try {
     const res = await fetch('/api/eval');
     const data = await res.json();
-    const rows = data.agents.map(a => `
+    if (!data.available) {
+      container.innerHTML = `<p style="color:var(--muted)">${data.message}</p>`;
+      return;
+    }
+    const rows = data.results.map(r => `
       <tr>
-        <td>${a.agent}</td>
-        <td>${a.checks_passed}/${a.checks_total}</td>
-        <td>${a.compliance_pct}%</td>
-        <td>${a.time_to_first_passing_eval_minutes} min</td>
-        <td><span class="badge badge-pass">PASS</span></td>
+        <td>${r.case}</td>
+        <td>${r.category}</td>
+        <td>${r.tool ?? '—'}</td>
+        <td>${r.status}</td>
+        <td><span class="badge ${r.passed ? 'badge-pass' : 'badge-fail'}">${r.passed ? 'PASS' : 'FAIL'}</span></td>
       </tr>`).join('');
     container.innerHTML = `
       <p style="color:var(--muted);margin-bottom:1rem">
-        ${data.summary.all_passing}/${data.summary.total} agents passing all checks
+        ${data.cases_passed}/${data.cases_total} cases passed · model <code>${data.model}</code>
       </p>
       <table>
-        <thead><tr><th>Agent</th><th>Checks</th><th>Compliance</th><th>Time</th><th>Status</th></tr></thead>
+        <thead><tr><th>Case</th><th>Category</th><th>Tool</th><th>Status</th><th>Result</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
     evalLoaded = true;
@@ -134,3 +150,4 @@ async function loadEval() {
 
 // Init
 showSection('overview');
+loadOverview();

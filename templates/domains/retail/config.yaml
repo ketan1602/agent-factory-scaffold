@@ -1,4 +1,0 @@
-domain: retail
-description: retail operations and commerce automation
-instructions: "Focus on business impact: pricing, margins, inventory efficiency, and customer experience. Flag anomalies above 5% threshold."
-default_model: claude-sonnet-4-6

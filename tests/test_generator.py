@@ -6,49 +6,39 @@ import pytest
 
 from cli.generator import AgentGenerator
 
-
-@pytest.fixture
-def generator(tmp_path: Path) -> AgentGenerator:
-    return AgentGenerator(output_dir=tmp_path)
+REQUIRED = {"scenario/support.py", "scenario/llm.py", "scenario/cases.py", "scenario/cases.json",
+            "scripts/run_eval.py", "pyproject.toml", ".env.example", "README.md", ".gitignore"}
 
 
-def test_dry_run_returns_file_list(generator: AgentGenerator) -> None:
-    result = generator.generate("test-agent", "retail", dry_run=True)
-    assert len(result.files_generated) == 8
-    assert result.agent_name == "test-agent"
-    assert result.domain == "retail"
+def test_dry_run_lists_files_and_writes_nothing(tmp_path: Path) -> None:
+    result = AgentGenerator(output_dir=tmp_path).generate("support-east", dry_run=True)
+    assert REQUIRED <= set(result.files_generated)
+    assert list(tmp_path.iterdir()) == []
 
 
-def test_dry_run_writes_nothing(generator: AgentGenerator, tmp_path: Path) -> None:
-    generator.generate("test-agent", "retail", dry_run=True)
-    assert not (tmp_path / "test-agent").exists()
+def test_generate_writes_every_listed_file(tmp_path: Path) -> None:
+    result = AgentGenerator(output_dir=tmp_path).generate("support-east")
+    for rel in result.files_generated:
+        assert (tmp_path / "support-east" / rel).is_file()
 
 
-def test_generate_writes_files(generator: AgentGenerator, tmp_path: Path) -> None:
-    generator.generate("my-agent", "finance", dry_run=False)
-    agent_dir = tmp_path / "my-agent"
-    assert (agent_dir / "agent" / "schemas.py").exists()
-    assert (agent_dir / "agent" / "agent.py").exists()
-    assert (agent_dir / "agent" / "nodes.py").exists()
-    assert (agent_dir / "agent" / "prompts.py").exists()
-    assert (agent_dir / "agent" / "__init__.py").exists()
-    assert (agent_dir / "pyproject.toml").exists()
-    assert (agent_dir / "config" / "harness.yaml").exists()
-    assert (agent_dir / ".env.example").exists()
+def test_agent_id_is_stamped_into_scenario(generated: Path) -> None:
+    support = (generated / "scenario" / "support.py").read_text()
+    assert 'AGENT_ID = "support-east"' in support
+    assert 'AGENT_ID = "support-agent"' not in support
 
 
-def test_unknown_domain_raises(generator: AgentGenerator) -> None:
-    with pytest.raises(ValueError, match="Unknown domain"):
-        generator.generate("x", "unknown-domain")
+def test_env_example_lists_llm_variables(generated: Path) -> None:
+    text = (generated / ".env.example").read_text()
+    for key in ("LLM_API_KEY=", "LLM_BASE_URL=", "LLM_MODEL="):
+        assert key in text
 
 
-def test_available_domains_returns_four(generator: AgentGenerator) -> None:
-    domains = generator.available_domains()
-    assert sorted(domains) == ["finance", "healthcare", "hr", "retail"]
+def test_pyproject_names_the_agent(generated: Path) -> None:
+    assert 'name = "support-east"' in (generated / "pyproject.toml").read_text()
 
 
-def test_context_class_name(generator: AgentGenerator, tmp_path: Path) -> None:
-    generator.generate("pricing-monitor", "retail", dry_run=False)
-    agent_py = tmp_path / "pricing-monitor" / "agent" / "agent.py"
-    content = agent_py.read_text()
-    assert "PricingMonitor" in content
+@pytest.mark.parametrize("bad", ["Support_East", "1agent", "a", "has space", "../escape"])
+def test_rejects_invalid_names(tmp_path: Path, bad: str) -> None:
+    with pytest.raises(ValueError, match="Invalid agent name"):
+        AgentGenerator(output_dir=tmp_path).generate(bad, dry_run=True)

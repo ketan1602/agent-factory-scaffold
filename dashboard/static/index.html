@@ -21,58 +21,31 @@
     <div id="section-overview" class="section">
       <div class="hero">
         <h1>Agent Factory</h1>
-        <p class="subtitle">Repo 07 — Beyond the Model</p>
+        <p class="subtitle">Repo 07 — Beyond the Model · ENG-10 Agent Factories</p>
       </div>
-      <div class="callout">
-        <strong>Key Finding:</strong> Factory-generated agents are production-ready in 28 minutes.
-        Handcrafted: 3 days. 100% compliance out of the box, with only 3 engineering decisions
-        instead of 35.
+      <div class="card">
+        <h2>What the factory does</h2>
+        <p>
+          The factory stamps out the support agent from the harness-foundations article: 16 cases
+          over 14 categories, run with a live OpenAI-compatible model through
+          <code>agent-harness-core</code> 1.5.1. The engineer supplies the agent name and the
+          environment; the harness, the capability wiring, the eval runner and the compliance
+          checks come with the template.
+        </p>
       </div>
       <div class="stats">
         <div class="stat-card">
-          <div class="value">28 min</div>
-          <div class="label">Factory time to first agent</div>
+          <div class="value" id="stat-time">—</div>
+          <div class="label">Measured: generate + live eval</div>
         </div>
         <div class="stat-card">
-          <div class="value">8</div>
-          <div class="label">Pre-generated retail agents</div>
+          <div class="value" id="stat-cases">—</div>
+          <div class="label">Eval cases passed (live)</div>
         </div>
         <div class="stat-card">
-          <div class="value">100%</div>
-          <div class="label">Compliance out of the box</div>
+          <div class="value" id="stat-compliance">—</div>
+          <div class="label">Compliance checks passed</div>
         </div>
-      </div>
-      <div class="card">
-        <h2>What is the Agent Factory?</h2>
-        <p>
-          The Agent Factory is a CLI tool that generates production-ready LangGraph agents from
-          Jinja2 templates in under 30 minutes. Each generated agent includes structured logging,
-          harness integration, retry logic, cost tracking, and audit trails — all the
-          cross-cutting concerns that take days to hand-craft.
-        </p>
-        <p style="margin-top:0.75rem">
-          Pick a domain (retail, finance, healthcare, or HR), run one command, and get a fully
-          compliant agent skeleton ready for business logic. A built-in compliance validator
-          checks 8 golden-path requirements so nothing gets missed.
-        </p>
-      </div>
-      <div class="card">
-        <h2>Pre-generated Retail Agents</h2>
-        <table>
-          <thead>
-            <tr><th>Agent</th><th>Description</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>pricing-monitor</td><td>Competitor price analysis and recommendation</td></tr>
-            <tr><td>inventory-alert</td><td>Stock level monitoring and reorder triggers</td></tr>
-            <tr><td>returns-processing</td><td>Return request triage and decision</td></tr>
-            <tr><td>supplier-query</td><td>Supplier performance metric retrieval</td></tr>
-            <tr><td>customer-sentiment</td><td>Interaction tone analysis and escalation</td></tr>
-            <tr><td>fraud-flag</td><td>Transaction risk scoring and flagging</td></tr>
-            <tr><td>delivery-exception</td><td>Shipment exception resolution planning</td></tr>
-            <tr><td>product-recommendation</td><td>Session-aware product suggestions</td></tr>
-          </tbody>
-        </table>
       </div>
     </div>
 
@@ -82,19 +55,10 @@
       <div class="card">
         <form id="generate-form">
           <div class="form-group">
-            <label for="agent-name">Agent Name (kebab-case)</label>
-            <input id="agent-name" type="text" placeholder="my-new-agent" required />
+            <label for="agent-name">Agent name (lowercase kebab-case)</label>
+            <input id="agent-name" type="text" placeholder="support-east" required />
           </div>
-          <div class="form-group">
-            <label for="agent-domain">Domain</label>
-            <select id="agent-domain">
-              <option value="retail">retail</option>
-              <option value="finance">finance</option>
-              <option value="healthcare">healthcare</option>
-              <option value="hr">hr</option>
-            </select>
-          </div>
-          <button type="submit">Generate Agent</button>
+          <button type="submit">Preview Files</button>
         </form>
         <div id="generate-output"></div>
       </div>
@@ -102,7 +66,7 @@
 
     <!-- Metrics -->
     <div id="section-metrics" class="section">
-      <h2>Factory Performance Metrics</h2>
+      <h2>Measured Factory Performance</h2>
       <div id="metrics-content">
         <p style="color:var(--muted)">Loading…</p>
       </div>
@@ -110,7 +74,7 @@
 
     <!-- Eval -->
     <div id="section-eval" class="section">
-      <h2>Pre-generated Agent Eval Results</h2>
+      <h2>Live Eval Results</h2>
       <div class="card">
         <div id="eval-content">
           <p style="color:var(--muted)">Loading…</p>

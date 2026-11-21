@@ -1,42 +1,20 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
-_AGENTS = [
-    "pricing-monitor",
-    "inventory-alert",
-    "returns-processing",
-    "supplier-query",
-    "customer-sentiment",
-    "fraud-flag",
-    "delivery-exception",
-    "product-recommendation",
-]
+_RESULTS = (Path(__file__).parent.parent.parent / "generated_agents" / "support-agent"
+            / "measurements" / "eval_results.json")
 
 
 @router.get("/api/eval")
 async def eval_results() -> JSONResponse:
-    results = [
-        {
-            "agent": name,
-            "passed": True,
-            "checks_passed": 8,
-            "checks_total": 8,
-            "compliance_pct": 100.0,
-            "time_to_first_passing_eval_minutes": 28,
-        }
-        for name in _AGENTS
-    ]
-    return JSONResponse(
-        content={
-            "agents": results,
-            "summary": {
-                "total": len(_AGENTS),
-                "all_passing": len(_AGENTS),
-                "compliance_pct": 100.0,
-            },
-        }
-    )
+    if not _RESULTS.exists():
+        return JSONResponse(content={"available": False,
+                                     "message": "No eval run yet. Run scripts/run_eval.py."})
+    return JSONResponse(content={"available": True, **json.loads(_RESULTS.read_text())})

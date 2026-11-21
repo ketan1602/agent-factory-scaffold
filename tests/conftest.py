@@ -1,18 +1,13 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 import pytest
 
-
-@pytest.fixture
-def templates_dir():
-    return Path(__file__).parent.parent / "templates"
+from cli.generator import AgentGenerator
 
 
 @pytest.fixture
-def generated_agents_dir():
-    return Path(__file__).parent.parent / "generated_agents"
-
-
-@pytest.fixture
-def pricing_monitor_path(generated_agents_dir):
-    return generated_agents_dir / "pricing-monitor"
+def generated(tmp_path: Path) -> Path:
+    AgentGenerator(output_dir=tmp_path).generate("support-east")
+    return tmp_path / "support-east"

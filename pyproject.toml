@@ -7,13 +7,11 @@ name = "agent-factory-scaffold"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-    "agent-harness-core @ git+https://github.com/ketan1602/agent-harness-core.git@v1.0.0",
-    "langgraph>=0.2.0",
-    "langchain-core>=0.3.0",
-    "airefinery-sdk>=1.33.0",
+    # measure runs the generated agent in this interpreter, so it needs the agent's runtime too
+    "agent-harness-core>=1.5.1",
+    "openai>=1.0.0",
     "truststore>=0.9.1",
     "pydantic>=2.0.0",
-    "pyyaml>=6.0",
     "python-dotenv>=1.0.0",
     "fastapi>=0.110.0",
     "uvicorn[standard]>=0.27.0",
@@ -38,6 +36,8 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+# The scenario is vendored verbatim from the harness-foundations repo, which lints it itself
+extend-exclude = ["templates/spine", "generated_agents"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "BLE", "S"]
