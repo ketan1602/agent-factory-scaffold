@@ -181,7 +181,7 @@ Token cost is measured. Each run reports the tokens from the model API's usage f
 | support-agent | 11,577 | $0.0579 | 5 | $35.42 | 13 | $2.73 |
 | **All four** | **23,870** | **$0.1194** | **11** | **$77.92** | **30** | **$2.60** |
 
-Figure 2. Run 3 with the guard. Escalations are measured; the $7.08 per escalation is an assumption.
+Table 2. Run 3 with the guard. Escalations are measured; the $7.08 per escalation is an assumption.
 
 Two points follow. First, the escalation count is measured, but its cost is not: the $7.08 per escalation is five minutes at an assumed $85 an hour. The $77.92 is therefore mostly a function of an assumption, and a different review time changes the figure directly. Second, the trade is now visible. A failed refund in production is invisible and costs the customer. A guarded refund costs a human reviewer's time, which the factory can price. The repository cannot say whether that trade is worth it, because the real review time and the real refund rate are not known. It can show that the trade exists and what it costs at the assumed rates.
 
