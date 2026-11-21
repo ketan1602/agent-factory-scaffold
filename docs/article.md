@@ -12,7 +12,7 @@ That run passed every check the factory had at the time. This article is about t
 
 ## The answer
 
-A factory that generates agents from a manifest and releases them on live evidence makes the release decision repeatable and visible. It does not make the model choose the right action. In our runs, the harness held every tool boundary, and the model's choice still decided whether a refund happened. The factory's job is to make that gap visible and to price the human work it creates. The boundary results and the decision results come from the same runs, and they answer different questions.
+A factory that generates agents from a manifest and releases them on live evidence makes the release decision repeatable and visible. It does not make the model choose the right action. In our runs, the harness held every tool boundary, and the model's choice still decided whether a refund happened. The factory's job is to make that gap visible and to price the human work it creates. The boundary results and the decision results come from the same runs, and they answer different questions. The management series makes the same distinction at the firm level: a pilot shows that capability exists, and only the process shows whether the firm can use it. The eval measures capability case by case. The release gate checks whether the process held.
 
 ## Method
 
@@ -42,7 +42,7 @@ Repository commit `05d17e5`. Every number below traces to `measurements/release.
 
 **Success is defined in code, not by the model.** A successful outcome is a case that passed the eval and recorded no critical violation. Cost per successful outcome is total cost divided by those outcomes, so a failed case adds cost without adding to the denominator. That definition is in `cli/economics.py`, and it is the only place the figure is computed.
 
-**Human review sets the unit cost.** Token cost for all four agents was $0.12. Human review at the assumed rate was $77.92, for 11 escalations. Cost per successful outcome was $2.17, and almost all of it is review time. Exhibit 2 shows the split.
+**Human review sets the unit cost.** Token cost for all four agents was $0.12. Human review at the assumed rate was $77.92, for 11 escalations. Cost per successful outcome was $2.17, and almost all of it is review time. Exhibit 2 shows the split. Eleven of 36 cases needed a person, or 31%. Agent throughput was never the limit. The limit was review capacity, which is the constraint shift the management series calls the Throughput Inversion. Our data is one instance of it, not its origin.
 
 ![Exhibit 2. Human review, not tokens, sets the cost per successful outcome.](images/exhibit-2-economics.png)
 
@@ -70,6 +70,7 @@ Repository commit `05d17e5`. Every number below traces to `measurements/release.
 - **Platform teams should generate agents from the manifest and scope the prompt from the same grants.** The first release blocked agents for requesting tools they were never granted. The prompt was the defect, not the harness.
 - **Platform teams should archive per-run results.** Later runs overwrote earlier per-case files, so some earlier claims can now be checked only at summary level.
 - **Risk owners should set the gate thresholds and the review assumptions before the release.** Those two inputs decide what "released" means and what a refund that goes to review costs.
+- **Platform teams should build controls that can disagree with the model, and ask which layer a release changed.** The Engine Room argues that a control that cannot disagree is not a control. The completion guard disagrees with the model when a refund ends as a note. Of the five layers in the Agentic OS, this release changed two: the Kernel, through grants and approval, and Observability, through the release report. Scheduler and Memory are not built.
 - **Domain owners should own the expected action for each case, including approval holds.** One case expected `create_ticket` for a $150 refund. The owner decided it should be an approval hold, and the expectation changed.
 
 ## Close
@@ -90,3 +91,4 @@ Run the same manifests on a third model. If its decisions differ from the first 
 - **Changeable without new model calls:** cost assumptions, gate thresholds, and the release report's economics. Re-run `agent-factory release` only for a new model or new cases.
 - **Exhibits:** `docs/images/render_exhibits.py` renders the PNGs from values copied out of the release reports.
 - **Tests:** `pytest tests/` (51 tests, no model calls); `ruff check .`.
+- **Management series:** *The Pilot Trap*, *The Engine Room: Operating the Agentic Firm*, and *The Firm Runs on Five Assumptions* (LinkedIn, Oct to Nov 2026). Referenced for concepts only; no figure in this article comes from them.
