@@ -33,7 +33,7 @@ assumption.
 ## Install and run
 
 ```bash
-pip install -e ../agent-harness-core/agent-harness-core   # agent-harness-core 1.5.1, from the tagged repo
+pip install "agent-harness-core @ git+https://github.com/ketan1602/agent-harness-core.git@v1.5.1"   # harness-core 1.5.1 from the GitHub tag
 pip install -e .
 cp .env.example .env          # fill LLM_API_KEY and LLM_BASE_URL (never commit .env)
 
@@ -109,9 +109,6 @@ Each entry is a decision taken during the rebuild, with its reason.
 - **LangGraph.** The series rule is LangGraph for agent graphs. The spine's support agent is a single
   model decision run through `harness_core` capabilities, with no LangGraph graph. This build follows
   the spine. Confirm before the article calls it a LangGraph agent.
-- **Harness-core install.** `agent-harness-core` 1.5.1 is tagged in the local repo, but I found no
-  git remote for it. `pyproject.toml` pins `>=1.5.1`, so installs need the local path until the tag is
-  published.
 - **One model, one sample.** The live result is one run of one model. Repeats and a second model are
   needed before any claim about stability.
 

@@ -6,7 +6,7 @@ harness-foundations article: 16 cases, run with a live model through `agent-harn
 ## Setup
 
 ```bash
-pip install -e ../agent-harness-core/agent-harness-core   # harness-core 1.5.1, from the tagged repo
+pip install "agent-harness-core @ git+https://github.com/ketan1602/agent-harness-core.git@v1.5.1"   # harness-core 1.5.1 from the GitHub tag
 pip install -e .
 cp .env.example .env   # then fill in LLM_API_KEY and LLM_BASE_URL
 ```
