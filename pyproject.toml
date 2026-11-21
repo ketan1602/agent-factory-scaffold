@@ -38,7 +38,7 @@ testpaths = ["tests"]
 line-length = 100
 target-version = "py311"
 # The scenario is vendored verbatim from the harness-foundations repo, which lints it itself
-extend-exclude = ["templates/spine", "generated_agents"]
+extend-exclude = ["templates/spine", "generated_agents", "runs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "BLE", "S"]

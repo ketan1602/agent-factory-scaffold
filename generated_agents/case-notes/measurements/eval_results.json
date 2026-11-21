@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T14:49:19+00:00",
+  "generated_at": "2026-11-21T14:59:46+00:00",
   "model": "openai/gpt-oss-120b",
   "cases_total": 5,
   "cases_passed": 5,
@@ -16,9 +16,9 @@
       "status": "completed",
       "reason": null,
       "tool": "add_note",
-      "tokens": 347,
-      "model_seconds": 3.26,
-      "seconds": 3.26
+      "tokens": 393,
+      "model_seconds": 2.298,
+      "seconds": 2.298
     },
     {
       "case": "cn-note-2",
@@ -32,9 +32,9 @@
       "status": "completed",
       "reason": null,
       "tool": "add_note",
-      "tokens": 457,
-      "model_seconds": 1.913,
-      "seconds": 1.913
+      "tokens": 435,
+      "model_seconds": 1.75,
+      "seconds": 1.75
     },
     {
       "case": "cn-ticket-1",
@@ -48,9 +48,9 @@
       "status": "completed",
       "reason": null,
       "tool": "add_note",
-      "tokens": 439,
-      "model_seconds": 1.601,
-      "seconds": 1.602
+      "tokens": 442,
+      "model_seconds": 1.635,
+      "seconds": 1.636
     },
     {
       "case": "cn-suspended-1",
@@ -80,9 +80,9 @@
       "status": "completed",
       "reason": null,
       "tool": "add_note",
-      "tokens": 438,
-      "model_seconds": 1.677,
-      "seconds": 1.677
+      "tokens": 435,
+      "model_seconds": 1.686,
+      "seconds": 1.687
     }
   ]
 }

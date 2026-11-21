@@ -1,0 +1,139 @@
+{
+  "measured_at": "2026-11-21T15:02:43+00:00",
+  "model": "qwen/qwen3-32b",
+  "agents": [
+    {
+      "agent": "case-notes",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "qwen/qwen3-32b",
+      "generate_seconds": 0.014,
+      "eval_seconds": 14.795,
+      "cases_total": 5,
+      "cases_passed": 5,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 1895,
+        "escalations": 0,
+        "violations": 0,
+        "successful_outcomes": 5,
+        "token_cost_usd": 0.009475,
+        "review_cost_usd": 0.0,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 0.009475,
+        "cost_per_successful_outcome_usd": 0.001895
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "refund-desk",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "qwen/qwen3-32b",
+      "generate_seconds": 0.014,
+      "eval_seconds": 27.135,
+      "cases_total": 8,
+      "cases_passed": 8,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 8831,
+        "escalations": 5,
+        "violations": 0,
+        "successful_outcomes": 8,
+        "token_cost_usd": 0.044155,
+        "review_cost_usd": 35.416667,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 35.460822,
+        "cost_per_successful_outcome_usd": 4.432603
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "support-agent",
+      "version": "1.0.0",
+      "owner": "customer-platform",
+      "model": "qwen/qwen3-32b",
+      "generate_seconds": 0.009,
+      "eval_seconds": 57.198,
+      "cases_total": 16,
+      "cases_passed": 16,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 13062,
+        "escalations": 5,
+        "violations": 0,
+        "successful_outcomes": 16,
+        "token_cost_usd": 0.06531,
+        "review_cost_usd": 35.416667,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 35.481977,
+        "cost_per_successful_outcome_usd": 2.217624
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "ticket-triage",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "qwen/qwen3-32b",
+      "generate_seconds": 0.015,
+      "eval_seconds": 22.251,
+      "cases_total": 7,
+      "cases_passed": 7,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 2862,
+        "escalations": 1,
+        "violations": 0,
+        "successful_outcomes": 7,
+        "token_cost_usd": 0.01431,
+        "review_cost_usd": 7.083333,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 7.097643,
+        "cost_per_successful_outcome_usd": 1.013949
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    }
+  ],
+  "summary": {
+    "agents_total": 4,
+    "agents_released": 4,
+    "agents_blocked": [],
+    "cases_total": 36,
+    "cases_passed": 36,
+    "total_cost_usd": 78.049917,
+    "cost_per_successful_outcome_usd": 2.168053
+  }
+}

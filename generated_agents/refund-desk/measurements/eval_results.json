@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T14:49:33+00:00",
+  "generated_at": "2026-11-21T14:59:59+00:00",
   "model": "openai/gpt-oss-120b",
   "cases_total": 8,
   "cases_passed": 8,
@@ -16,9 +16,9 @@
       "status": "completed",
       "reason": null,
       "tool": "issue_refund",
-      "tokens": 443,
-      "model_seconds": 1.79,
-      "seconds": 1.791
+      "tokens": 453,
+      "model_seconds": 1.822,
+      "seconds": 1.823
     },
     {
       "case": "rd-boundary-1",
@@ -32,9 +32,9 @@
       "status": "completed",
       "reason": null,
       "tool": "issue_refund",
-      "tokens": 450,
-      "model_seconds": 1.475,
-      "seconds": 1.476
+      "tokens": 446,
+      "model_seconds": 1.335,
+      "seconds": 1.335
     },
     {
       "case": "rd-pending-1",
@@ -48,9 +48,9 @@
       "status": "awaiting_approval",
       "reason": "approval_required",
       "tool": "issue_refund",
-      "tokens": 536,
-      "model_seconds": 1.653,
-      "seconds": 1.653
+      "tokens": 514,
+      "model_seconds": 1.611,
+      "seconds": 1.612
     },
     {
       "case": "rd-approved-1",
@@ -65,8 +65,8 @@
       "reason": null,
       "tool": "issue_refund",
       "tokens": 514,
-      "model_seconds": 1.792,
-      "seconds": 1.793
+      "model_seconds": 1.564,
+      "seconds": 1.564
     },
     {
       "case": "rd-rejected-1",
@@ -80,9 +80,9 @@
       "status": "rejected",
       "reason": "rejected_by_human",
       "tool": "issue_refund",
-      "tokens": 536,
-      "model_seconds": 1.63,
-      "seconds": 1.631
+      "tokens": 551,
+      "model_seconds": 1.79,
+      "seconds": 1.79
     },
     {
       "case": "rd-bad-approver-1",
@@ -96,9 +96,9 @@
       "status": "awaiting_approval",
       "reason": "approver_not_authorised",
       "tool": "issue_refund",
-      "tokens": 556,
-      "model_seconds": 1.742,
-      "seconds": 1.742
+      "tokens": 558,
+      "model_seconds": 1.662,
+      "seconds": 1.663
     },
     {
       "case": "rd-unauthorized-1",
@@ -112,9 +112,9 @@
       "status": "completed",
       "reason": null,
       "tool": "add_note",
-      "tokens": 366,
-      "model_seconds": 1.472,
-      "seconds": 1.473
+      "tokens": 362,
+      "model_seconds": 1.478,
+      "seconds": 1.479
     },
     {
       "case": "rd-over-budget-1",
@@ -134,8 +134,8 @@
       "reason": "budget_exceeded:tokens",
       "tool": "issue_refund",
       "tokens": 5001,
-      "model_seconds": 1.436,
-      "seconds": 1.436
+      "model_seconds": 1.488,
+      "seconds": 1.489
     }
   ]
 }

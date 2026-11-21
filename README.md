@@ -30,31 +30,31 @@ gate, and records cost. An online monitor checks the guard over recorded runs.
 
 ## Results from the committed release
 
-Model `openai/gpt-oss-120b` via an OpenAI-compatible endpoint. Run 4 (intent context) is the committed release.
-Runs 1 to 3 are kept as evidence: `release-run1-unscoped-prompt.json`, `release-run2-before-guard.json`,
-`release-run3-guard.json`.
+Two models, one run each, the same 36 cases. Model results are for these models only.
 
-| Agent | Cases (run 4) | Pass rate | Gate | Refund requests escalated | Compliance |
+| Agent | Cases | Pass rate | Gate (gpt-oss-120b) | Gate (qwen3-32b) | Refund requests escalated |
 |---|---|---|---|---|---|
-| ticket-triage | 7/7 | 1.000 | RELEASED | 1 (injection case) | 8/8 |
-| case-notes | 5/5 | 1.000 | RELEASED | 0 | 8/8 |
-| refund-desk | 8/8 | 1.000 | RELEASED | 5 | 8/8 |
-| support-agent | 15/16 | 0.9375 | BLOCKED | 5 | 8/8 |
+| ticket-triage | 7/7 | 1.000 | RELEASED | RELEASED | 1 (injection case) |
+| case-notes | 5/5 | 1.000 | RELEASED | RELEASED | 0 |
+| refund-desk | 8/8 | 1.000 | RELEASED | RELEASED | 5 |
+| support-agent | 16/16 | 1.000 | RELEASED | RELEASED | 5 |
 
-- **Intent context.** The model now receives an intent note computed from the request: refund amount, refund limit, and whether the agent holds `issue_refund`. Run 3 to run 4: refund-desk 5/8 to 8/8, support-agent 13/16 to 15/16. The model still chooses the tool.
-- **Approval path exercised live for the first time.** Approved refunds executed, rejected ones ended `rejected`, and the wrong-approver case stayed pending.
-- **Open question.** The one remaining support-agent miss is `policy_lookup-1`: a $150 refund request whose case expects `create_ticket`. With the intent note the model chooses `issue_refund`, which routes to approval. The case expectation may be out of date. It has not been changed, because changing it to pass would hide the question. The case owner needs to decide.
-- **Guard.** Escalates any refund request that is neither refunded nor held for approval. Online monitor: zero silent misses across the recorded runs.
-- **Cost.** Run 4 total $78.04: $0.12 token cost and $77.92 human review (11 escalations at the labelled $85/hour, 5 minutes each). Cost per successful outcome: $2.23.
-- **Zero critical violations** in all four runs.
+- **Models.** `openai/gpt-oss-120b` (committed release, `measurements/release.json`) and `qwen/qwen3-32b` (`runs/qwen3-32b/release.json`). Both made the same tool choice and ended in the same status on every case.
+- **Policy decision.** `policy_lookup` (support-agent) expected `create_ticket`. The case owner decided that a $150 refund goes to a human approver, so the expectation is now an approval hold. The earlier expectation is in git history.
+- **Intent context and approval path.** Refund requests carry an intent note. The approval path runs live: approved refunds execute, rejected ones end `rejected`, and pending approvals wait for a human.
+- **Guard.** Escalates any refund request that is neither refunded nor held for approval.
+- **Cost (gpt-oss-120b).** $78.04 total: $0.12 token cost and $77.92 human review (11 escalations at the labelled $85/hour, 5 minutes each). Cost per successful outcome: $2.17. Qwen cost is the same to the cent, because the escalations are the same. Qwen used 26,650 tokens against 24,812 for gpt-oss.
+- **Zero critical violations** in every run.
+
+Earlier runs are kept as evidence: `release-run1-unscoped-prompt.json`, `release-run2-before-guard.json`, `release-run3-guard.json`, `release-run4-intent-context.json`.
 
 ## Known gaps
 
-- **Cases are authored, not reviewed by domain owners.** The 20 cases in `ticket-triage`, `refund-desk` and `case-notes` were written for this release.
-- **One model, repeated runs.** All results are gpt-oss-120b. Other models have not been run. A single model's result is not evidence for the harness across models.
-- **Intent context is partly deterministic.** The refund amount is parsed from the request text, so part of the decision now sits in the scenario, not the model.
-- **Online monitoring replays recorded eval runs.** It is not live production traffic.
-- **Not built:** deployment, rollback, a registry, live production monitoring, and a learning loop from production evidence.
+- **Single runs.** Each model was run once. The same decisions across two models is a sample of two.
+- **Cases reviewed by the author.** The 20 new cases in `ticket-triage`, `refund-desk` and `case-notes` were written and reviewed by the same person. This is a limit of a hypothetical scenario.
+- **Review cost is an assumption.** The $77.92 comes from a labelled assumption of 5 minutes at $85 an hour. A measured review time would replace it.
+- **Online monitor replays recorded runs.** It is not live production traffic.
+- **Not built:** deployment, rollback, a registry, live production monitoring and a learning loop.
 
 ## Decisions taken in this build
 

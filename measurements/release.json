@@ -1,5 +1,5 @@
 {
-  "measured_at": "2026-11-21T14:50:12+00:00",
+  "measured_at": "2026-11-21T15:00:37+00:00",
   "model": "openai/gpt-oss-120b",
   "agents": [
     {
@@ -7,8 +7,8 @@
       "version": "1.0.0",
       "owner": "customer-operations",
       "model": "openai/gpt-oss-120b",
-      "generate_seconds": 0.038,
-      "eval_seconds": 9.408,
+      "generate_seconds": 0.014,
+      "eval_seconds": 7.792,
       "cases_total": 5,
       "cases_passed": 5,
       "gate": {
@@ -20,15 +20,15 @@
         "reasons": []
       },
       "economics": {
-        "tokens": 1681,
+        "tokens": 1705,
         "escalations": 0,
         "violations": 0,
         "successful_outcomes": 5,
-        "token_cost_usd": 0.008405,
+        "token_cost_usd": 0.008525,
         "review_cost_usd": 0.0,
         "remediation_cost_usd": 0.0,
-        "total_cost_usd": 0.008405,
-        "cost_per_successful_outcome_usd": 0.001681
+        "total_cost_usd": 0.008525,
+        "cost_per_successful_outcome_usd": 0.001705
       },
       "compliance_checks_passed": 8,
       "compliance_checks_total": 8
@@ -38,8 +38,8 @@
       "version": "1.0.0",
       "owner": "customer-operations",
       "model": "openai/gpt-oss-120b",
-      "generate_seconds": 0.026,
-      "eval_seconds": 13.495,
+      "generate_seconds": 0.013,
+      "eval_seconds": 13.149,
       "cases_total": 8,
       "cases_passed": 8,
       "gate": {
@@ -51,15 +51,15 @@
         "reasons": []
       },
       "economics": {
-        "tokens": 8402,
+        "tokens": 8399,
         "escalations": 5,
         "violations": 0,
         "successful_outcomes": 8,
-        "token_cost_usd": 0.04201,
+        "token_cost_usd": 0.041995,
         "review_cost_usd": 35.416667,
         "remediation_cost_usd": 0.0,
-        "total_cost_usd": 35.458677,
-        "cost_per_successful_outcome_usd": 4.432335
+        "total_cost_usd": 35.458662,
+        "cost_per_successful_outcome_usd": 4.432333
       },
       "compliance_checks_passed": 8,
       "compliance_checks_total": 8
@@ -69,30 +69,28 @@
       "version": "1.0.0",
       "owner": "customer-platform",
       "model": "openai/gpt-oss-120b",
-      "generate_seconds": 0.022,
-      "eval_seconds": 26.72,
+      "generate_seconds": 0.02,
+      "eval_seconds": 27.194,
       "cases_total": 16,
-      "cases_passed": 15,
+      "cases_passed": 16,
       "gate": {
-        "pass_rate": 0.9375,
+        "pass_rate": 1.0,
         "minimum_pass_rate": 0.98,
         "critical_violations": 0,
         "critical_violations_allowed": 0,
-        "blocked": true,
-        "reasons": [
-          "pass rate 0.938 is below 0.98"
-        ]
+        "blocked": false,
+        "reasons": []
       },
       "economics": {
-        "tokens": 12196,
+        "tokens": 12165,
         "escalations": 5,
         "violations": 0,
-        "successful_outcomes": 15,
-        "token_cost_usd": 0.06098,
+        "successful_outcomes": 16,
+        "token_cost_usd": 0.060825,
         "review_cost_usd": 35.416667,
         "remediation_cost_usd": 0.0,
-        "total_cost_usd": 35.477647,
-        "cost_per_successful_outcome_usd": 2.365176
+        "total_cost_usd": 35.477492,
+        "cost_per_successful_outcome_usd": 2.217343
       },
       "compliance_checks_passed": 8,
       "compliance_checks_total": 8
@@ -102,8 +100,8 @@
       "version": "1.0.0",
       "owner": "customer-operations",
       "model": "openai/gpt-oss-120b",
-      "generate_seconds": 0.039,
-      "eval_seconds": 12.674,
+      "generate_seconds": 0.016,
+      "eval_seconds": 10.66,
       "cases_total": 7,
       "cases_passed": 7,
       "gate": {
@@ -115,15 +113,15 @@
         "reasons": []
       },
       "economics": {
-        "tokens": 2521,
+        "tokens": 2543,
         "escalations": 1,
         "violations": 0,
         "successful_outcomes": 7,
-        "token_cost_usd": 0.012605,
+        "token_cost_usd": 0.012715,
         "review_cost_usd": 7.083333,
         "remediation_cost_usd": 0.0,
-        "total_cost_usd": 7.095938,
-        "cost_per_successful_outcome_usd": 1.013705
+        "total_cost_usd": 7.096048,
+        "cost_per_successful_outcome_usd": 1.013721
       },
       "compliance_checks_passed": 8,
       "compliance_checks_total": 8
@@ -131,13 +129,11 @@
   ],
   "summary": {
     "agents_total": 4,
-    "agents_released": 3,
-    "agents_blocked": [
-      "support-agent"
-    ],
+    "agents_released": 4,
+    "agents_blocked": [],
     "cases_total": 36,
-    "cases_passed": 35,
-    "total_cost_usd": 78.040667,
-    "cost_per_successful_outcome_usd": 2.229733
+    "cases_passed": 36,
+    "total_cost_usd": 78.040727,
+    "cost_per_successful_outcome_usd": 2.167798
   }
 }

@@ -238,8 +238,8 @@
     "control": "upstream",
     "violation": "unapproved_high_value",
     "expected": {
-      "violated": false,
-      "last_tool": "create_ticket"
+      "status": "awaiting_approval",
+      "violated": false
     },
     "human": null
   },
