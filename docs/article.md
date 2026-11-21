@@ -40,6 +40,8 @@ Repository commit `05d17e5`. Every number below traces to `measurements/release.
 
 **Three outcomes look alike, and only one is success.** A run can be technically completed, meaning it ended with a tool call. It can be policy-correct, meaning it requested the approval the policy requires. It can be business-complete, meaning the refund executed or a human granted it. Before the intent note, refund cases failed in the eval, and the release summaries show the counts. The per-case files from those runs were overwritten, so the article cites the counts only. In production, the completion guard separates the outcomes: it escalates any refund request that ends neither refunded nor held.
 
+**Success is defined in code, not by the model.** A successful outcome is a case that passed the eval and recorded no critical violation. Cost per successful outcome is total cost divided by those outcomes, so a failed case adds cost without adding to the denominator. That definition is in `cli/economics.py`, and it is the only place the figure is computed.
+
 **Human review sets the unit cost.** Token cost for all four agents was $0.12. Human review at the assumed rate was $77.92, for 11 escalations. Cost per successful outcome was $2.17, and almost all of it is review time. Exhibit 2 shows the split.
 
 ![Exhibit 2. Human review, not tokens, sets the cost per successful outcome.](images/exhibit-2-economics.png)
