@@ -9,6 +9,7 @@ import time
 from harness_core.capabilities import Model, ModelDecision, ModelRequest
 
 from scenario.config import ALLOWED_TOOLS
+from scenario.intent import intent_note
 from scenario.support import REQUIRED_ARGS, ModelTrace
 
 DEFAULT_MODEL = "openai/gpt-oss-120b"
@@ -58,7 +59,10 @@ def _measured_tokens(response) -> int:
 
 
 def _user_message(request: ModelRequest) -> str:
-    return f"Request: {request.task}\n\nContext:\n{json.dumps(request.context, indent=2, default=str)}"
+    note = intent_note(request.task)
+    prefix = f"{note}\n\n" if note else ""
+    return (f"{prefix}Request: {request.task}\n\nContext:\n"
+            f"{json.dumps(request.context, indent=2, default=str)}")
 
 
 def live_model(case: dict, trace: ModelTrace, model_name: str | None = None) -> Model:

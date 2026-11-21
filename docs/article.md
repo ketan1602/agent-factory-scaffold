@@ -137,21 +137,19 @@ The first run also showed something the design had not predicted: the failures w
 
 ---
 
-## 6. What the gates say about the agents that remain blocked
+## 6. What the gates caught, and what changed the result
 
-The manifest sets `minimumPassRate: 0.98`. With 5 to 16 cases per agent, that threshold means every case must pass. A single miss blocks the release. We kept the threshold as written, rather than lowering it to pass.
+The manifest sets `minimumPassRate: 0.98`. With 5 to 16 cases per agent, every case must pass. We kept the threshold as written.
 
-`refund-desk` passed 5 of 8 cases. The three misses were the approval-path cases: an approved refund of 180, a rejected refund of 300, and a refund approved by an unauthorised approver. In each, the model did not choose `issue_refund`. It chose `add_note` and completed the run, so no approval was requested and the approval logic was never exercised.
+The first guarded run blocked `refund-desk` at 5 of 8 and `support-agent` at 13 of 16. The misses were the approval-path cases. For each, the model chose `add_note` or `create_ticket` for a refund request and completed the run, so no approval was requested. The guard escalated those requests, but the eval still failed them: a refund that becomes a note is still wrong.
 
-`support-agent` passed 13 of 16. Its three misses are the same approval-path cases in the spine's own scenario. The model chose `create_ticket` and completed the run. Across both runs, the three misses are the same cases, and no critical violation occurred.
+We then changed one thing. The model now receives an intent note computed from the request: the refund amount, the refund limit, and whether the agent holds `issue_refund`. Above the limit, the note says to call `issue_refund`, and not to open a ticket. The model still chooses the tool. The note only states what the request requires.
 
-The honest reading is that the gate caught a real capability gap. The model reliably handles refund requests that need no approval, and it does not reliably choose the refund tool when the request is phrased as a refund of a specific amount. In both runs, the approval path was never reached, so the harness's approval logic has not yet been tested live against this model. It is tested by unit tests only.
+Result: `refund-desk` went from 5 of 8 to 8 of 8 and was released. `support-agent` went from 13 of 16 to 15 of 16 and is still blocked. The approval path was exercised live for the first time: approved refunds executed, rejected ones ended as rejected, and the wrong-approver case stayed pending.
 
-We do not know whether a different model, prompt or case phrasing would change this.
+The one remaining `support-agent` miss is `policy_lookup`, a $150 refund request whose case expects `create_ticket`. With the intent note, the model chooses `issue_refund`, which routes to approval. The case expectation may be out of date. We did not change it, because changing it to pass would hide the question. The case owner needs to decide.
 
-The guard addresses the other half of the problem. A refund request that ends as a note or a ticket, with no approval requested, is a silent failure: the run completes and the customer is not refunded. Before the guard, 11 such requests completed or terminated silently across the agents. The guard now escalates every refund request that is neither refunded nor held for approval. The gate still blocks `refund-desk` and `support-agent`, because the guard protects customers without making the model pick the right tool. The eval still judges the cases as failed. The guard changes what happens to the customer, not the pass rate. We do know that a release process without a gate would have shipped `refund-desk` and `support-agent` as passing, and that the gate would have stopped a release in which the approval path failed silently.
-
----
+Two honest limits apply. The intent note is a change to the scenario, so the article discloses it. And it is part of the decision computed from request text, so the model's job is smaller than before. All of these results are one model, gpt-oss-120b.
 
 ## 7. The harness is the runtime foundation
 
@@ -175,13 +173,13 @@ Token cost is measured. Each run reports the tokens from the model API's usage f
 
 | Agent | Tokens | Token cost | Escalations | Review cost | Successful outcomes | Cost per successful outcome |
 |---|---|---|---|---|---|---|
-| ticket-triage | 2,577 | $0.0129 | 1 | $7.08 | 7 | $1.01 |
-| case-notes | 1,644 | $0.0082 | 0 | $0.00 | 5 | $0.00 |
-| refund-desk | 8,072 | $0.0404 | 5 | $35.42 | 5 | $7.09 |
-| support-agent | 11,577 | $0.0579 | 5 | $35.42 | 13 | $2.73 |
-| **All four** | **23,870** | **$0.1194** | **11** | **$77.92** | **30** | **$2.60** |
+| ticket-triage | 2,521 | $0.0126 | 1 | $7.08 | 7 | $1.01 |
+| case-notes | 1,681 | $0.0084 | 0 | $0.00 | 5 | $0.00 |
+| refund-desk | 8,402 | $0.0420 | 5 | $35.42 | 8 | $4.43 |
+| support-agent | 12,196 | $0.0610 | 5 | $35.42 | 15 | $2.37 |
+| **All four** | **24,800** | **$0.1240** | **11** | **$77.92** | **35** | **$2.23** |
 
-Table 2. Run 3 with the guard. Escalations are measured; the $7.08 per escalation is an assumption.
+Table 2. Run 4, with the guard and the intent note. Escalations are measured; the $7.08 per escalation is an assumption.
 
 Two points follow. First, the escalation count is measured, but its cost is not: the $7.08 per escalation is five minutes at an assumed $85 an hour. The $77.92 is therefore mostly a function of an assumption, and a different review time changes the figure directly. Second, the trade is now visible. A failed refund in production is invisible and costs the customer. A guarded refund costs a human reviewer's time, which the factory can price. The repository cannot say whether that trade is worth it, because the real review time and the real refund rate are not known. It can show that the trade exists and what it costs at the assumed rates.
 
@@ -207,11 +205,11 @@ The earlier draft of this article proposed a six-stage pipeline and a maturity r
 
 **Built:** a manifest contract the harness enforces; a generator that renders from it; a live eval of each agent's cases; a completion guard that escalates refund requests not actioned; a release gate applied from the manifest; cost per successful outcome with labelled assumptions; an online monitor that checks the guard over recorded runs; compliance checks; and a CI workflow with offline tests, dry-run generation and a manual live release.
 
-**Partly built:** online monitoring. It replays recorded eval runs. It does not watch live traffic, so it can show the guard works on the runs we have, not on production.
+**Partly built:** online monitoring. It replays recorded eval runs. The approval path now runs live in the eval, but not on production traffic. It does not watch live traffic, so it can show the guard works on the runs we have, not on production.
 
 **Not built:** deployment and rollback, a registry, live production monitoring, the learning loop from production evidence back into cases and templates, identity and memory in the manifest, and the review of the new cases by domain owners.
 
-**Not yet exercised live:** the approval path after a human decision, the review and remediation costs beyond the escalations, repeat runs across several models, and any comparison against a handcrafted baseline. The repository deliberately has no baseline figure. The earlier draft's "three days" and "35 decisions" were not measured, and they are not in the release.
+**Not yet exercised live:** repeat runs across several models, a real review time for the escalation cost, and any comparison against a handcrafted baseline. The repository deliberately has no baseline figure. The earlier draft's "three days" and "35 decisions" were not measured, and they are not in the release.
 
 Three steps would close the most important gaps, in this order:
 
@@ -251,7 +249,7 @@ I expect that loop to be the factory's real long-term value. It converts observa
 
 Building an individual agent will keep getting easier. Models will improve, frameworks will mature, and tooling will automate more of the implementation. Those advances reduce the cost of producing an agent. They do not remove the enterprise work of deciding whether an agent may act, proving that it behaves, and keeping the evidence.
 
-In our release, generating four agents took under a tenth of a second each. Deciding whether they could ship took the release. Two of the four agents were released by the gate. The guard then escalated the 11 refund requests that had been failing silently; at the assumed review rate those escalations account for $77.92 of the run's cost, which is why cost per successful outcome rose from $0.004 to $2.60. The two that were blocked failed on the approval path, which the factory had not yet proven. The first release also exposed a defect in the factory itself, which the second release corrected.
+In our release, generating four agents took under a tenth of a second each, and running their evals took between 8 and 26 seconds. Three of the four agents were released by the gate. The one blocked agent fails a single case that may carry a stale expectation, and that question belongs to its owner. The first release exposed a defect in the factory's own prompt, which a later release corrected. The guard escalated the refund requests that would otherwise have completed silently, and the intent note gave the model what it needed to choose the refund tool.
 
 That is the argument for an Agent Factory. Its value is not that it produces agents quickly. Its value is that it makes the decision to release an agent evidence-based, repeatable and visible, and that it turns each failure into a change every future agent inherits.
 

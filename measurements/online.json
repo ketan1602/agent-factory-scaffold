@@ -1,5 +1,5 @@
 {
-  "measured_at": "2026-11-21T14:38:59+00:00",
+  "measured_at": "2026-11-21T14:50:12+00:00",
   "source": "recorded eval runs (replayed traffic), not live production",
   "agents": {
     "case-notes": {
@@ -12,14 +12,14 @@
     "refund-desk": {
       "runs": 8,
       "refund_intents": 7,
-      "guard_escalations": 5,
+      "guard_escalations": 1,
       "silent_misses": 0,
       "silent_miss_cases": []
     },
     "support-agent": {
       "runs": 16,
       "refund_intents": 6,
-      "guard_escalations": 5,
+      "guard_escalations": 0,
       "silent_misses": 0,
       "silent_miss_cases": []
     },
@@ -34,6 +34,6 @@
   "summary": {
     "silent_misses": 0,
     "alert": false,
-    "guard_escalations": 11
+    "guard_escalations": 2
   }
 }

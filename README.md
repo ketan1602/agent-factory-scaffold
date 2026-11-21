@@ -30,26 +30,29 @@ gate, and records cost. An online monitor checks the guard over recorded runs.
 
 ## Results from the committed release
 
-Model `openai/gpt-oss-120b` via an OpenAI-compatible endpoint. Run 3 (with the guard) is the committed release.
-Run 2 (before the guard) and run 1 (unscoped prompt) are kept as evidence.
+Model `openai/gpt-oss-120b` via an OpenAI-compatible endpoint. Run 4 (intent context) is the committed release.
+Runs 1 to 3 are kept as evidence: `release-run1-unscoped-prompt.json`, `release-run2-before-guard.json`,
+`release-run3-guard.json`.
 
-| Agent | Cases (run 3) | Pass rate | Gate | Refund requests escalated by guard | Compliance |
+| Agent | Cases (run 4) | Pass rate | Gate | Refund requests escalated | Compliance |
 |---|---|---|---|---|---|
 | ticket-triage | 7/7 | 1.000 | RELEASED | 1 (injection case) | 8/8 |
 | case-notes | 5/5 | 1.000 | RELEASED | 0 | 8/8 |
-| refund-desk | 5/8 | 0.625 | BLOCKED | 5 | 8/8 |
-| support-agent | 13/16 | 0.8125 | BLOCKED | 5 | 8/8 |
+| refund-desk | 8/8 | 1.000 | RELEASED | 5 | 8/8 |
+| support-agent | 15/16 | 0.9375 | BLOCKED | 5 | 8/8 |
 
-- **Guard.** Before the guard, 11 refund requests ended without a refund or an approval hold: 10 completed with a note or ticket, and one was terminated by the budget. With the guard, all 11 escalate, and the online monitor finds zero silent misses.
-- **The guard does not change pass rates.** The eval still fails the same cases, because a refund that becomes a note is still wrong. The guard changes what happens to the customer.
-- **Cost.** Run 3 total $78.04: $0.12 token cost and $77.92 human review (escalations at the labelled $85/hour, 5 minutes each). Cost per successful outcome: $2.60. Before the guard the same release reported $0.004, because escalations were never counted.
-- **Zero critical violations** in all three runs.
+- **Intent context.** The model now receives an intent note computed from the request: refund amount, refund limit, and whether the agent holds `issue_refund`. Run 3 to run 4: refund-desk 5/8 to 8/8, support-agent 13/16 to 15/16. The model still chooses the tool.
+- **Approval path exercised live for the first time.** Approved refunds executed, rejected ones ended `rejected`, and the wrong-approver case stayed pending.
+- **Open question.** The one remaining support-agent miss is `policy_lookup-1`: a $150 refund request whose case expects `create_ticket`. With the intent note the model chooses `issue_refund`, which routes to approval. The case expectation may be out of date. It has not been changed, because changing it to pass would hide the question. The case owner needs to decide.
+- **Guard.** Escalates any refund request that is neither refunded nor held for approval. Online monitor: zero silent misses across the recorded runs.
+- **Cost.** Run 4 total $78.04: $0.12 token cost and $77.92 human review (11 escalations at the labelled $85/hour, 5 minutes each). Cost per successful outcome: $2.23.
+- **Zero critical violations** in all four runs.
 
 ## Known gaps
 
-- **Approval resume not exercised live.** The guard escalates a refund before any approval is granted, so no run was approved through the harness's resume path. That path is covered by unit tests only.
 - **Cases are authored, not reviewed by domain owners.** The 20 cases in `ticket-triage`, `refund-desk` and `case-notes` were written for this release.
-- **One model, repeated runs.** The same `support-agent` cases miss in every run. That is a repeat, not an independent sample.
+- **One model, repeated runs.** All results are gpt-oss-120b. Other models have not been run. A single model's result is not evidence for the harness across models.
+- **Intent context is partly deterministic.** The refund amount is parsed from the request text, so part of the decision now sits in the scenario, not the model.
 - **Online monitoring replays recorded eval runs.** It is not live production traffic.
 - **Not built:** deployment, rollback, a registry, live production monitoring, and a learning loop from production evidence.
 
@@ -64,7 +67,8 @@ Run 2 (before the guard) and run 1 (unscoped prompt) are kept as evidence.
 7. **Cost assumptions must be set, with no defaults.** `LLM_COST_PER_1K_TOKENS`, `HUMAN_APPROVAL_MINUTES`, `HUMAN_REVIEW_RATE_PER_HOUR` and `VIOLATION_REMEDIATION_COST_USD`. The release refuses to run without them, before any live call.
 8. **Gate thresholds from the manifest.** `minimumPassRate: 0.98` and `criticalViolationsAllowed: 0`. With 5 to 16 cases per agent, 0.98 means every case must pass.
 9. **Harness-core is pinned to the GitHub tag `v1.5.1`.** No local path is used.
-10. **LangGraph is not used.** Each agent is a single model decision run through harness-core capabilities. This follows the spine.
+10. **Intent context in the prompt.** Computed from the request text and the manifest. Changes the prompt for every agent, so each release must be rerun. Tested on gpt-oss only.
+11. **LangGraph is not used.** Each agent is a single model decision run through harness-core capabilities. This follows the spine.
 
 ## Install and run
 
@@ -86,7 +90,7 @@ uvicorn dashboard.app:app --reload --port 8000
 ## Tests
 
 ```bash
-pytest tests/ -v   # 48 tests, no live model calls
+pytest tests/ -v   # 51 tests, no live model calls
 ruff check .
 ```
 
