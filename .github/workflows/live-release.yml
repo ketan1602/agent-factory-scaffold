@@ -1,0 +1,36 @@
+name: live-release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: live-model
+    env:
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_COST_PER_1K_TOKENS: ${{ vars.LLM_COST_PER_1K_TOKENS }}
+      HUMAN_APPROVAL_MINUTES: ${{ vars.HUMAN_APPROVAL_MINUTES }}
+      HUMAN_REVIEW_RATE_PER_HOUR: ${{ vars.HUMAN_REVIEW_RATE_PER_HOUR }}
+      VIOLATION_REMEDIATION_COST_USD: ${{ vars.VIOLATION_REMEDIATION_COST_USD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install factory and harness-core 1.5.1 from its tag
+        run: |
+          pip install "agent-harness-core @ git+https://github.com/ketan1602/agent-harness-core.git@v1.5.1"
+          pip install -e .
+      - name: Release every manifest against the live model
+        run: agent-factory release
+      - name: Keep the release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence
+          path: |
+            measurements/release.json
+            generated_agents/*/measurements/eval_results.json

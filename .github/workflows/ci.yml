@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install factory and harness-core 1.5.1 from its tag
+        run: |
+          pip install "agent-harness-core @ git+https://github.com/ketan1602/agent-harness-core.git@v1.5.1"
+          pip install -e . pytest ruff httpx pytest-asyncio
+      - name: Lint
+        run: ruff check .
+      - name: Test (no live model calls)
+        run: pytest tests/ -v
+      - name: Generate every manifest as a dry run
+        run: |
+          for m in manifests/*.yaml; do agent-factory generate --manifest "$m" --dry-run; done

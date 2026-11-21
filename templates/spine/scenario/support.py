@@ -25,14 +25,21 @@ from harness_core.capabilities.reference import (
 )
 from harness_core.capabilities.types import Model
 
-AGENT_ID = "support-agent"
-REFUND_LIMIT = 100.0
+from scenario.config import (
+    AGENT_ID,
+    ALLOWED_TOOLS,
+    APPROVERS,
+    MAX_COST_USD,
+    MAX_TOKENS,
+    OWNER,
+    REFUND_LIMIT,
+    SCOPE,
+)
+
 ALLOWED_CONTEXT = frozenset({"customer_id", "order_id", "subject", "amount"})
 FORBIDDEN_CONTEXT = frozenset({"card_number", "api_token", "ssn"})
-APPROVERS = {"supervisor-1"}
-MANIFEST = AgentManifest(AGENT_ID, "customer-platform",
-                         ("create_ticket", "add_note", "issue_refund"),
-                         Budget(max_tokens=5000, max_cost_usd=0.25), scope="support")
+MANIFEST = AgentManifest(AGENT_ID, OWNER, ALLOWED_TOOLS,
+                         Budget(max_tokens=MAX_TOKENS, max_cost_usd=MAX_COST_USD), scope=SCOPE)
 KNOWLEDGE = [
     {"scope": "support", "source_id": "policy-refunds",
      "text": f"refund requests above {REFUND_LIMIT:.0f} require supervisor approval"},

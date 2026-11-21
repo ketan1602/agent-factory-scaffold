@@ -18,7 +18,8 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from scenario.cases import load_cases, run_harnessed  # noqa: E402
+from scenario.cases import load_cases  # noqa: E402
+from scenario.guard import guarded_run  # noqa: E402
 from scenario.llm import config_error, model_id  # noqa: E402
 
 OUT = ROOT / "measurements" / "eval_results.json"
@@ -28,12 +29,18 @@ async def evaluate() -> list[dict]:
     results = []
     for case in load_cases():
         started = time.perf_counter()
-        outcome = await run_harnessed(case)
+        outcome = await guarded_run(case)
         decision = outcome["decision"] or {}
         results.append({
             "case": case["id"],
             "category": case["category"],
             "passed": outcome["verdict"]["passed"],
+            "violated": outcome["violated"],
+            "escalated": outcome["interventions"]["escalated_to_human"]
+            or outcome["status"] == "awaiting_approval" or outcome["human"] is not None,
+            "utterance": case["utterance"],
+            "last_tool": outcome["last_tool"],
+            "guard": outcome.get("guard"),
             "status": outcome["status"],
             "reason": outcome["reason"],
             "tool": decision.get("tool"),

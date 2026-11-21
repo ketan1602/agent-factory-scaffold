@@ -1,0 +1,149 @@
+{
+  "measured_at": "2026-11-21T14:30:23+00:00",
+  "model": "openai/gpt-oss-120b",
+  "agents": [
+    {
+      "agent": "case-notes",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.009,
+      "eval_seconds": 11.356,
+      "cases_total": 5,
+      "cases_passed": 3,
+      "gate": {
+        "pass_rate": 0.6,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": true,
+        "reasons": [
+          "pass rate 0.600 is below 0.98"
+        ]
+      },
+      "economics": {
+        "tokens": 1700,
+        "escalations": 0,
+        "violations": 0,
+        "successful_outcomes": 3,
+        "token_cost_usd": 0.0085,
+        "review_cost_usd": 0.0,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 0.0085,
+        "cost_per_successful_outcome_usd": 0.002833
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "refund-desk",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.013,
+      "eval_seconds": 12.914,
+      "cases_total": 8,
+      "cases_passed": 5,
+      "gate": {
+        "pass_rate": 0.625,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": true,
+        "reasons": [
+          "pass rate 0.625 is below 0.98"
+        ]
+      },
+      "economics": {
+        "tokens": 8128,
+        "escalations": 0,
+        "violations": 0,
+        "successful_outcomes": 5,
+        "token_cost_usd": 0.04064,
+        "review_cost_usd": 0.0,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 0.04064,
+        "cost_per_successful_outcome_usd": 0.008128
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "support-agent",
+      "version": "1.0.0",
+      "owner": "customer-platform",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.037,
+      "eval_seconds": 26.953,
+      "cases_total": 16,
+      "cases_passed": 13,
+      "gate": {
+        "pass_rate": 0.8125,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": true,
+        "reasons": [
+          "pass rate 0.812 is below 0.98"
+        ]
+      },
+      "economics": {
+        "tokens": 11688,
+        "escalations": 0,
+        "violations": 0,
+        "successful_outcomes": 13,
+        "token_cost_usd": 0.05844,
+        "review_cost_usd": 0.0,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 0.05844,
+        "cost_per_successful_outcome_usd": 0.004495
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "ticket-triage",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.011,
+      "eval_seconds": 12.365,
+      "cases_total": 7,
+      "cases_passed": 7,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 2816,
+        "escalations": 0,
+        "violations": 0,
+        "successful_outcomes": 7,
+        "token_cost_usd": 0.01408,
+        "review_cost_usd": 0.0,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 0.01408,
+        "cost_per_successful_outcome_usd": 0.002011
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    }
+  ],
+  "summary": {
+    "agents_total": 4,
+    "agents_released": 1,
+    "agents_blocked": [
+      "case-notes",
+      "refund-desk",
+      "support-agent"
+    ],
+    "cases_total": 36,
+    "cases_passed": 28,
+    "total_cost_usd": 0.12166,
+    "cost_per_successful_outcome_usd": 0.004345
+  }
+}

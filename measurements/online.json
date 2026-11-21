@@ -1,0 +1,39 @@
+{
+  "measured_at": "2026-11-21T14:38:59+00:00",
+  "source": "recorded eval runs (replayed traffic), not live production",
+  "agents": {
+    "case-notes": {
+      "runs": 5,
+      "refund_intents": 0,
+      "guard_escalations": 0,
+      "silent_misses": 0,
+      "silent_miss_cases": []
+    },
+    "refund-desk": {
+      "runs": 8,
+      "refund_intents": 7,
+      "guard_escalations": 5,
+      "silent_misses": 0,
+      "silent_miss_cases": []
+    },
+    "support-agent": {
+      "runs": 16,
+      "refund_intents": 6,
+      "guard_escalations": 5,
+      "silent_misses": 0,
+      "silent_miss_cases": []
+    },
+    "ticket-triage": {
+      "runs": 7,
+      "refund_intents": 1,
+      "guard_escalations": 1,
+      "silent_misses": 0,
+      "silent_miss_cases": []
+    }
+  },
+  "summary": {
+    "silent_misses": 0,
+    "alert": false,
+    "guard_escalations": 11
+  }
+}

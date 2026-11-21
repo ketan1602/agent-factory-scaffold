@@ -6,24 +6,28 @@ from pathlib import Path
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from dashboard.charts import pass_chart, time_chart
+from dashboard.charts import pass_chart
 
 router = APIRouter()
 
-_MEASUREMENTS = Path(__file__).parent.parent.parent / "measurements" / "factory_performance.json"
+_REPORT = Path(__file__).parent.parent.parent / "measurements" / "release.json"
 
 
 @router.get("/api/metrics")
 async def metrics() -> JSONResponse:
-    if not _MEASUREMENTS.exists():
+    if not _REPORT.exists():
         return JSONResponse(content={"available": False,
-                                     "message": "No measurement yet. Run agent-factory measure."})
-    data = json.loads(_MEASUREMENTS.read_text())
+                                     "message": "No release run yet. Run agent-factory release."})
+    report = json.loads(_REPORT.read_text())
+    summary = report["summary"]
     return JSONResponse(content={
         "available": True,
-        **data,
-        "charts": {
-            "time_to_eval": time_chart(data["time_to_eval_minutes"]),
-            "cases_passed": pass_chart(data["cases_passed"], data["cases_total"]),
-        },
+        "measured_at": report["measured_at"],
+        "model": report["model"],
+        "summary": summary,
+        "agents": [{k: a[k] for k in ("agent", "version", "owner", "cases_passed", "cases_total",
+                                      "gate", "economics", "generate_seconds", "eval_seconds",
+                                      "compliance_checks_passed", "compliance_checks_total")}
+                   for a in report["agents"]],
+        "charts": {"cases_passed": pass_chart(summary["cases_passed"], summary["cases_total"])},
     })

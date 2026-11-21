@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from fastapi import APIRouter
@@ -7,16 +8,18 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from cli.generator import AgentGenerator
+from cli.manifest import load_manifest
 from cli.validator import ComplianceValidator
 
 router = APIRouter()
 
-_PROJECT_ROOT = Path(__file__).parent.parent.parent
-_REFERENCE_AGENT = _PROJECT_ROOT / "generated_agents" / "support-agent"
+_ROOT = Path(__file__).parent.parent.parent
+_GENERATED = _ROOT / "generated_agents"
+_NAME = re.compile(r"^[a-z][a-z0-9-]{1,62}$")
 
 
-class GenerateRequest(BaseModel):
-    name: str
+class PreviewRequest(BaseModel):
+    manifest: str
 
 
 def _build_file_tree(files: list[str]) -> dict:
@@ -30,24 +33,27 @@ def _build_file_tree(files: list[str]) -> dict:
     return tree
 
 
-def _compliance() -> list[dict]:
-    if not _REFERENCE_AGENT.exists():
-        return [{"name": "Reference agent", "passed": False,
-                 "message": "generated_agents/support-agent not found"}]
-    validation = ComplianceValidator().validate(_REFERENCE_AGENT)
-    return [{"name": c.name, "passed": c.passed, "message": c.message} for c in validation.checks]
+def _compliance(name: str) -> list[dict]:
+    project = _GENERATED / name
+    if not project.exists():
+        return [{"name": "Generated project", "passed": False,
+                 "message": f"generated_agents/{name} not found; run agent-factory release"}]
+    return [{"name": c.name, "passed": c.passed, "message": c.message}
+            for c in ComplianceValidator().validate(project).checks]
 
 
 @router.post("/api/generate")
-async def generate_agent(req: GenerateRequest) -> JSONResponse:
-    try:
-        result = AgentGenerator().generate(req.name, dry_run=True)
-    except ValueError as exc:
-        return JSONResponse(status_code=400, content={"detail": str(exc)})
+async def preview_agent(req: PreviewRequest) -> JSONResponse:
+    if not _NAME.match(req.manifest):
+        return JSONResponse(status_code=400, content={"detail": "invalid manifest name"})
+    path = _ROOT / "manifests" / f"{req.manifest}.yaml"
+    if not path.exists():
+        return JSONResponse(status_code=404, content={"detail": f"no manifest {req.manifest}"})
+    result = AgentGenerator().generate(load_manifest(path), dry_run=True)
     return JSONResponse(content={
         "files": result.files_generated,
         "duration_seconds": round(result.duration_seconds, 4),
         "file_tree": _build_file_tree(result.files_generated),
-        "compliance_source": "generated_agents/support-agent",
-        "compliance": _compliance(),
+        "compliance_source": f"generated_agents/{req.manifest}",
+        "compliance": _compliance(req.manifest),
     })

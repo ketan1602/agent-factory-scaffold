@@ -32,7 +32,7 @@ def test_secret_value_in_env_example_fails(generated: Path) -> None:
     assert "No secret literal" in _failed(ComplianceValidator().validate(generated))
 
 
-def test_wrong_case_count_fails(generated: Path) -> None:
+def test_empty_cases_fail(generated: Path) -> None:
     (generated / "scenario" / "cases.json").write_text("[]")
     assert "Eval cases" in _failed(ComplianceValidator().validate(generated))
 

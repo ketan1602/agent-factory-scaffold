@@ -1,0 +1,23 @@
+apiVersion: agents.enterprise/v1
+kind: Agent
+
+metadata:
+  name: ticket-triage
+  version: 1.0.0
+  owner: customer-operations
+
+spec:
+  runtime: agent-harness-core 1.5.1 (CapabilityHarness)
+  scope: support
+  tools:
+    allow: [create_ticket, add_note]
+  budget:
+    maxTokens: 5000
+    maxCostUsd: 0.25
+  approval:
+    refundAboveAmount: 100
+    approvers: [supervisor-1]
+  evaluation:
+    cases: ticket-triage.json
+    minimumPassRate: 0.98
+    criticalViolationsAllowed: 0

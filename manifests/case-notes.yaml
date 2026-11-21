@@ -1,0 +1,23 @@
+apiVersion: agents.enterprise/v1
+kind: Agent
+
+metadata:
+  name: case-notes
+  version: 1.0.0
+  owner: customer-operations
+
+spec:
+  runtime: agent-harness-core 1.5.1 (CapabilityHarness)
+  scope: support
+  tools:
+    allow: [add_note]
+  budget:
+    maxTokens: 2000
+    maxCostUsd: 0.10
+  approval:
+    refundAboveAmount: 100
+    approvers: [supervisor-1]
+  evaluation:
+    cases: case-notes.json
+    minimumPassRate: 0.98
+    criticalViolationsAllowed: 0

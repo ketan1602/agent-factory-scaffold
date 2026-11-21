@@ -62,10 +62,10 @@ def _check_eval_cases(path: Path) -> CheckResult:
         cases = json.loads(_text(path, "scenario/cases.json") or "null")
     except json.JSONDecodeError:
         cases = None
-    ok = isinstance(cases, list) and len(cases) == 16 and all(
+    ok = isinstance(cases, list) and bool(cases) and all(
         {"id", "utterance", "expected"} <= set(c) for c in cases)
-    return _result("Eval cases", ok, "16 support cases",
-                   "scenario/cases.json is not 16 valid cases")
+    good = f"{len(cases)} valid eval cases" if isinstance(cases, list) else "eval cases present"
+    return _result("Eval cases", ok, good, "scenario/cases.json is empty or has invalid cases")
 
 
 def _check_env_example(path: Path) -> CheckResult:
@@ -91,7 +91,7 @@ def _check_harness_dependency(path: Path) -> CheckResult:
 
 
 def _check_eval_runner(path: Path) -> CheckResult:
-    return _result("Eval runner", "run_harnessed" in _text(path, "scripts/run_eval.py"),
+    return _result("Eval runner", "guarded_run" in _text(path, "scripts/run_eval.py"),
                    "scripts/run_eval.py runs every case",
                    "scripts/run_eval.py missing or incomplete")
 

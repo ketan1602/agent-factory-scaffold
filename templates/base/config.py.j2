@@ -1,0 +1,10 @@
+"""Agent identity, tool grants and limits. Generated from manifests/{{ name }}.yaml; edit the manifest."""
+
+AGENT_ID = "{{ name }}"
+OWNER = "{{ owner }}"
+SCOPE = "{{ scope }}"
+ALLOWED_TOOLS = ({% for tool in tools %}"{{ tool }}", {% endfor %})
+MAX_TOKENS = {{ max_tokens }}
+MAX_COST_USD = {{ max_cost_usd }}
+REFUND_LIMIT = {{ refund_limit }}
+APPROVERS = {{ approvers }}

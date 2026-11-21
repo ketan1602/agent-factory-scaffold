@@ -1,0 +1,23 @@
+apiVersion: agents.enterprise/v1
+kind: Agent
+
+metadata:
+  name: support-agent
+  version: 1.0.0
+  owner: customer-platform
+
+spec:
+  runtime: agent-harness-core 1.5.1 (CapabilityHarness)
+  scope: support
+  tools:
+    allow: [create_ticket, add_note, issue_refund]
+  budget:
+    maxTokens: 5000
+    maxCostUsd: 0.25
+  approval:
+    refundAboveAmount: 100
+    approvers: [supervisor-1]
+  evaluation:
+    cases: support-agent.json
+    minimumPassRate: 0.98
+    criticalViolationsAllowed: 0

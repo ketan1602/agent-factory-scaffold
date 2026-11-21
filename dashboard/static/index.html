@@ -11,52 +11,45 @@
     <span class="brand">Agent Factory</span>
     <a id="nav-overview">Overview</a>
     <a id="nav-demo">Demo</a>
-    <a id="nav-metrics">Metrics</a>
+    <a id="nav-metrics">Release</a>
     <a id="nav-eval">Eval</a>
   </nav>
 
   <div class="container">
 
-    <!-- Overview -->
     <div id="section-overview" class="section">
       <div class="hero">
         <h1>Agent Factory</h1>
-        <p class="subtitle">Repo 07 — Beyond the Model · ENG-10 Agent Factories</p>
+        <p class="subtitle">Repo 07 — ENG-10 Agent Factories: Industrialising Agent Delivery</p>
       </div>
       <div class="card">
-        <h2>What the factory does</h2>
         <p>
-          The factory stamps out the support agent from the harness-foundations article: 16 cases
-          over 14 categories, run with a live OpenAI-compatible model through
-          <code>agent-harness-core</code> 1.5.1. The engineer supplies the agent name and the
-          environment; the harness, the capability wiring, the eval runner and the compliance
-          checks come with the template.
+          Each agent is described by a manifest: owner, tool grants, budget, approval rule and
+          release thresholds. The factory generates the agent from the manifest, runs its live eval
+          against an OpenAI-compatible model through <code>agent-harness-core</code> 1.5.1, applies
+          the manifest's release gate, and records the cost. Every number on this page comes from
+          the last release run.
         </p>
       </div>
       <div class="stats">
-        <div class="stat-card">
-          <div class="value" id="stat-time">—</div>
-          <div class="label">Measured: generate + live eval</div>
-        </div>
-        <div class="stat-card">
-          <div class="value" id="stat-cases">—</div>
-          <div class="label">Eval cases passed (live)</div>
-        </div>
-        <div class="stat-card">
-          <div class="value" id="stat-compliance">—</div>
-          <div class="label">Compliance checks passed</div>
-        </div>
+        <div class="stat-card"><div class="value" id="stat-released">—</div><div class="label">Agents released by gate</div></div>
+        <div class="stat-card"><div class="value" id="stat-cases">—</div><div class="label">Eval cases passed</div></div>
+        <div class="stat-card"><div class="value" id="stat-cost">—</div><div class="label">Cost per successful outcome (USD)</div></div>
       </div>
     </div>
 
-    <!-- Demo -->
     <div id="section-demo" class="section">
-      <h2>Generate an Agent</h2>
+      <h2>Preview an Agent</h2>
       <div class="card">
         <form id="generate-form">
           <div class="form-group">
-            <label for="agent-name">Agent name (lowercase kebab-case)</label>
-            <input id="agent-name" type="text" placeholder="support-east" required />
+            <label for="manifest-name">Manifest</label>
+            <select id="manifest-name">
+              <option value="ticket-triage">ticket-triage</option>
+              <option value="refund-desk">refund-desk</option>
+              <option value="case-notes">case-notes</option>
+              <option value="support-agent">support-agent</option>
+            </select>
           </div>
           <button type="submit">Preview Files</button>
         </form>
@@ -64,22 +57,14 @@
       </div>
     </div>
 
-    <!-- Metrics -->
     <div id="section-metrics" class="section">
-      <h2>Measured Factory Performance</h2>
-      <div id="metrics-content">
-        <p style="color:var(--muted)">Loading…</p>
-      </div>
+      <h2>Release Run</h2>
+      <div id="metrics-content"><p style="color:var(--muted)">Loading…</p></div>
     </div>
 
-    <!-- Eval -->
     <div id="section-eval" class="section">
       <h2>Live Eval Results</h2>
-      <div class="card">
-        <div id="eval-content">
-          <p style="color:var(--muted)">Loading…</p>
-        </div>
-      </div>
+      <div id="eval-content"><p style="color:var(--muted)">Loading…</p></div>
     </div>
 
   </div>

@@ -8,13 +8,20 @@ from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
-_RESULTS = (Path(__file__).parent.parent.parent / "generated_agents" / "support-agent"
-            / "measurements" / "eval_results.json")
+_ROOT = Path(__file__).parent.parent.parent
+_REPORT = _ROOT / "measurements" / "release.json"
 
 
 @router.get("/api/eval")
 async def eval_results() -> JSONResponse:
-    if not _RESULTS.exists():
+    if not _REPORT.exists():
         return JSONResponse(content={"available": False,
-                                     "message": "No eval run yet. Run scripts/run_eval.py."})
-    return JSONResponse(content={"available": True, **json.loads(_RESULTS.read_text())})
+                                     "message": "No release run yet. Run agent-factory release."})
+    report = json.loads(_REPORT.read_text())
+    agents = []
+    for agent in report["agents"]:
+        results_file = _ROOT / "generated_agents" / agent["agent"] / "measurements" / \
+            "eval_results.json"
+        rows = json.loads(results_file.read_text())["results"] if results_file.exists() else []
+        agents.append({**agent, "results": rows})
+    return JSONResponse(content={"available": True, "agents": agents})

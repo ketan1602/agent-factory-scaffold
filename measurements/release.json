@@ -1,0 +1,146 @@
+{
+  "measured_at": "2026-11-21T14:38:59+00:00",
+  "model": "openai/gpt-oss-120b",
+  "agents": [
+    {
+      "agent": "case-notes",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.041,
+      "eval_seconds": 7.969,
+      "cases_total": 5,
+      "cases_passed": 5,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 1644,
+        "escalations": 0,
+        "violations": 0,
+        "successful_outcomes": 5,
+        "token_cost_usd": 0.00822,
+        "review_cost_usd": 0.0,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 0.00822,
+        "cost_per_successful_outcome_usd": 0.001644
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "refund-desk",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.023,
+      "eval_seconds": 12.424,
+      "cases_total": 8,
+      "cases_passed": 5,
+      "gate": {
+        "pass_rate": 0.625,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": true,
+        "reasons": [
+          "pass rate 0.625 is below 0.98"
+        ]
+      },
+      "economics": {
+        "tokens": 8072,
+        "escalations": 5,
+        "violations": 0,
+        "successful_outcomes": 5,
+        "token_cost_usd": 0.04036,
+        "review_cost_usd": 35.416667,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 35.457027,
+        "cost_per_successful_outcome_usd": 7.091405
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "support-agent",
+      "version": "1.0.0",
+      "owner": "customer-platform",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.015,
+      "eval_seconds": 25.223,
+      "cases_total": 16,
+      "cases_passed": 13,
+      "gate": {
+        "pass_rate": 0.8125,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": true,
+        "reasons": [
+          "pass rate 0.812 is below 0.98"
+        ]
+      },
+      "economics": {
+        "tokens": 11577,
+        "escalations": 5,
+        "violations": 0,
+        "successful_outcomes": 13,
+        "token_cost_usd": 0.057885,
+        "review_cost_usd": 35.416667,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 35.474552,
+        "cost_per_successful_outcome_usd": 2.728812
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    },
+    {
+      "agent": "ticket-triage",
+      "version": "1.0.0",
+      "owner": "customer-operations",
+      "model": "openai/gpt-oss-120b",
+      "generate_seconds": 0.033,
+      "eval_seconds": 10.71,
+      "cases_total": 7,
+      "cases_passed": 7,
+      "gate": {
+        "pass_rate": 1.0,
+        "minimum_pass_rate": 0.98,
+        "critical_violations": 0,
+        "critical_violations_allowed": 0,
+        "blocked": false,
+        "reasons": []
+      },
+      "economics": {
+        "tokens": 2577,
+        "escalations": 1,
+        "violations": 0,
+        "successful_outcomes": 7,
+        "token_cost_usd": 0.012885,
+        "review_cost_usd": 7.083333,
+        "remediation_cost_usd": 0.0,
+        "total_cost_usd": 7.096218,
+        "cost_per_successful_outcome_usd": 1.013745
+      },
+      "compliance_checks_passed": 8,
+      "compliance_checks_total": 8
+    }
+  ],
+  "summary": {
+    "agents_total": 4,
+    "agents_released": 2,
+    "agents_blocked": [
+      "refund-desk",
+      "support-agent"
+    ],
+    "cases_total": 36,
+    "cases_passed": 30,
+    "total_cost_usd": 78.036017,
+    "cost_per_successful_outcome_usd": 2.601201
+  }
+}

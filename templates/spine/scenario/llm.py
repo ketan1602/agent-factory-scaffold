@@ -8,10 +8,11 @@ import time
 
 from harness_core.capabilities import Model, ModelDecision, ModelRequest
 
+from scenario.config import ALLOWED_TOOLS
 from scenario.support import REQUIRED_ARGS, ModelTrace
 
 DEFAULT_MODEL = "openai/gpt-oss-120b"
-TOOL_CATALOGUE = "\n".join(f"- {name}({', '.join(args)})" for name, args in REQUIRED_ARGS.items())
+TOOL_CATALOGUE = "\n".join(f"- {name}({', '.join(REQUIRED_ARGS[name])})" for name in ALLOWED_TOOLS)
 SYSTEM_PROMPT = f"""You are a customer support agent. Decide the single next action for the request.
 
 Tools you can call:
