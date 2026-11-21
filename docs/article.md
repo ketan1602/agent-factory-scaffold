@@ -12,7 +12,7 @@ That run passed every check the factory had at the time. This article is about t
 
 ## The answer
 
-A factory that generates agents from a manifest and releases them on live evidence makes the release decision repeatable and visible. It does not make the model choose the right action. In our runs, the harness held every tool boundary, and the model's choice still decided whether a refund happened. The factory's job is to make that gap visible and to price the human work it creates.
+A factory that generates agents from a manifest and releases them on live evidence makes the release decision repeatable and visible. It does not make the model choose the right action. In our runs, the harness held every tool boundary, and the model's choice still decided whether a refund happened. The factory's job is to make that gap visible and to price the human work it creates. The boundary results and the decision results come from the same runs, and they answer different questions.
 
 ## Method
 
